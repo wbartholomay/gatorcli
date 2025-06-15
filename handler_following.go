@@ -3,16 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"github.com/wbartholomay/gatorcli/internal/database"
 )
 
-func handlerFollowing(s *state, cmd command) error {
+func handlerFollowing(s *state, cmd command, user database.User) error {
 
-	currentUser, err := s.db.GetUser(context.Background(), s.cfg.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("getting current user has failed, are you logged in? err: %w", err)
-	}
-
-	feed_follows, err := s.db.GetFeedFollowsForUser(context.Background(), currentUser.ID)
+	feed_follows, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("error getting feed follows: %w", err)
 	}

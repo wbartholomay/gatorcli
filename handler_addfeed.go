@@ -9,7 +9,7 @@ import (
 	"github.com/wbartholomay/gatorcli/internal/database"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) < 2 {
 		return fmt.Errorf("not enough arguments. Example usage: addfeed <name> <url>")
 
@@ -17,11 +17,6 @@ func handlerAddFeed(s *state, cmd command) error {
 
 	name := cmd.args[0]
 	url := cmd.args[1]
-
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("no user found in DB for username, are you logged in? err: %w", err)
-	}
 
 	feedParams := database.CreateFeedParams{
 		ID : uuid.New(),

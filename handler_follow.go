@@ -9,7 +9,7 @@ import (
 	"github.com/wbartholomay/gatorcli/internal/database"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("no url provided. Example usage: follow <url>")
@@ -20,16 +20,11 @@ func handlerFollow(s *state, cmd command) error {
 		return fmt.Errorf("no feed found for given url %w", err)
 	}
 
-	currentUser, err := s.db.GetUser(context.Background(), s.cfg.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("user not found, are you logged in? %w", err)
-	}
-
 	params := database.CreateFeedFollowParams{
 		ID : uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
-		UserID: currentUser.ID,
+		UserID: user.ID,
 		FeedID: feed.ID,
 	}
 

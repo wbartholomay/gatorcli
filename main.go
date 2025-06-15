@@ -10,18 +10,6 @@ import (
 	"github.com/wbartholomay/gatorcli/internal/database"
 )
 
-var handlers map[string]func(*state, command) error = map[string]func(*state, command) error{
-	"login" : handlerLogin,
-	"register" : handlerRegister,
-	"reset" : handlerReset,
-	"users" : handlerUsers,
-	"agg" : handlerAgg,
-	"addfeed" : handlerAddFeed,
-	"feeds" : handlerFeeds,
-	"follow" : handlerFollow,
-	"following" : handlerFollowing,
-}
-
 func main() {
 	cfg, err := config.Read()
 	if err != nil { panic(err) }
@@ -37,10 +25,18 @@ func main() {
 		db : dbQueries,
 	}
 
-	//initialize commands struct
 	cmds := commands{
-		handlers : handlers,
+		registeredCommands: make(map[string]func(*state, command) error),
 	}
+	cmds.register("register", handlerRegister)
+	cmds.register("login", handlerLogin)
+	cmds.register("reset", handlerReset)
+	cmds.register("users", handlerUsers)
+	cmds.register("agg", handlerAgg)
+	cmds.register("addfeed", middlewareLoggedIn(handlerAddFeed))
+	cmds.register("feeds", handlerFeeds)
+	cmds.register("follow", middlewareLoggedIn(handlerFollow))
+	cmds.register("following", middlewareLoggedIn(handlerFollowing))
 
 	//read args from command line, create command struct
 	if len(os.Args) < 2 {
