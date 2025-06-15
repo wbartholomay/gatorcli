@@ -18,6 +18,7 @@ var handlers map[string]func(*state, command) error = map[string]func(*state, co
 	"agg" : handlerAgg,
 	"addfeed" : handlerAddFeed,
 	"feeds" : handlerFeeds,
+	"follow" : handlerFollow,
 }
 
 func main() {
@@ -62,6 +63,9 @@ func main() {
 	}
 
 	err = cmds.run(&s, cmd)
-	if err != nil { panic(err) }
+	if err != nil { 
+		fmt.Println(err)
+		os.Exit(1)
+	 }
 
 }

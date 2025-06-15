@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,8 +11,7 @@ import (
 
 func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) == 0 {
-		fmt.Println("no username provided. Example usage: login <username>")
-		os.Exit(1)
+		return fmt.Errorf("no username provided. Example usage: login <username>")
 	}
 
 	username := cmd.args[0]
@@ -27,8 +25,7 @@ func handlerRegister(s *state, cmd command) error {
 
 	user, err := s.db.CreateUser(context.Background(), userParams)
 	if err != nil {
-		fmt.Printf("An error has occurred: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("an error has occurred: %v", err)
 	}
 
 	s.cfg.SetUser(username)

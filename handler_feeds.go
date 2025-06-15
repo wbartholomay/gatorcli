@@ -3,15 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 )
 
 func handlerFeeds(s *state, cmd command) error {
 
 	feeds, err := s.db.GetFeeds(context.Background())
 	if err != nil {
-		fmt.Printf("getting all feeds has failed %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("getting all feeds has failed %v", err)
 	}
 
 	for _, feed := range feeds {

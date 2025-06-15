@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/google/uuid"
 	"github.com/wbartholomay/gatorcli/internal/database"
@@ -11,8 +10,8 @@ import (
 
 func handlerAddFeed(s *state, cmd command) error {
 	if len(cmd.args) < 2 {
-		fmt.Println("not enough arguments. Example usage: addfeed <name> <url>")
-		os.Exit(1)
+		return fmt.Errorf("not enough arguments. Example usage: addfeed <name> <url>")
+
 	}
 
 	name := cmd.args[0]

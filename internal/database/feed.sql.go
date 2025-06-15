@@ -55,6 +55,23 @@ func (q *Queries) DeleteAllFeeds(ctx context.Context) error {
 	return err
 }
 
+const getFeedByUrl = `-- name: GetFeedByUrl :one
+SELECT id, name, url, user_id FROM feed
+WHERE feed.url = $1
+`
+
+func (q *Queries) GetFeedByUrl(ctx context.Context, url string) (Feed, error) {
+	row := q.db.QueryRowContext(ctx, getFeedByUrl, url)
+	var i Feed
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Url,
+		&i.UserID,
+	)
+	return i, err
+}
+
 const getFeeds = `-- name: GetFeeds :many
 SELECT id, name, url, user_id FROM feed
 `

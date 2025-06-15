@@ -3,21 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 )
 
 func handlerReset(s *state, cmd command) error {
 
 	err := s.db.DeleteAllUsers(context.Background())
 	if err != nil{
-		fmt.Printf("deleting all users has failed %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("deleting all users has failed %v", err)
 	}
 
 	err = s.db.DeleteAllFeeds(context.Background())
 	if err != nil {
-		fmt.Printf("deleting all feeds has failed %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("deleting all feeds has failed %v", err)
 	}
 
 	fmt.Println("All users and feeds deleted successfully.")
