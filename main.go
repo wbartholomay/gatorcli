@@ -2,19 +2,51 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/wbartholomay/gatorcli/internal/config"
 )
+
+var handlers map[string]func(*state, command) error = map[string]func(*state, command) error{
+	"login" : handlerLogin,
+}
 
 func main() {
 	cfg, err := config.Read()
 	if err != nil { panic(err) }
 
-	err = cfg.SetUser("will")
-	if err != nil { panic(err) }
+	//intialize state struct
+	s := state{
+		cfg : &cfg,
+	}
 
-	cfg, err = config.Read()
-	if err != nil { panic(err) }
+	//initialize commands struct
+	cmds := commands{
+		handlers : handlers,
+	}
 
-	fmt.Println(cfg)
+	//read args from command line, create command struct
+	if len(os.Args) == 0 {
+		fmt.Println("No arguments were provided.")
+		os.Exit(1)
+	}
+
+	//initialize cmd name and args
+	cmdName := os.Args[0]
+	var cmdArgs []string
+	if len(os.Args) == 1 {
+		cmdArgs = []string{}
+	} else {
+		cmdArgs = os.Args[1:]
+	}
+
+
+	cmd := command{
+		name: cmdName,
+		args: cmdArgs,
+	}
+
+	err = cmds.run(&s, cmd)
+	if err != nil { panic(err) }
+	
 }
