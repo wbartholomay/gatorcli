@@ -19,6 +19,7 @@ var handlers map[string]func(*state, command) error = map[string]func(*state, co
 	"addfeed" : handlerAddFeed,
 	"feeds" : handlerFeeds,
 	"follow" : handlerFollow,
+	"following" : handlerFollowing,
 }
 
 func main() {
