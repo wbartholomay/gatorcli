@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/wbartholomay/gatorcli/internal/database"
@@ -26,8 +27,8 @@ func handlerFollow(s *state, cmd command) error {
 
 	params := database.CreateFeedFollowParams{
 		ID : uuid.New(),
-		Name : feed.Name,
-		Url: feed.Url,
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
 		UserID: currentUser.ID,
 		FeedID: feed.ID,
 	}

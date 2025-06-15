@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/wbartholomay/gatorcli/internal/database"
@@ -34,7 +35,20 @@ func handlerAddFeed(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("error occurred while adding feed to DB: %w", err)
 	}
+	fmt.Printf("Successfully created feed: %v\n",feed)
 
-	fmt.Println(feed)
+	feedFollowParams := database.CreateFeedFollowParams{
+		ID: uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID: user.ID,
+		FeedID: feed.ID,
+	}
+	feed_follow, err := s.db.CreateFeedFollow(context.Background(), feedFollowParams)
+	if err != nil {
+		return fmt.Errorf("error creating feed_follow: %w", err)
+	}
+
+	fmt.Printf("Successfully created feed_follow %v\n", feed_follow)
 	return nil
 }
