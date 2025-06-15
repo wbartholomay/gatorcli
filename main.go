@@ -26,18 +26,18 @@ func main() {
 	}
 
 	//read args from command line, create command struct
-	if len(os.Args) == 0 {
+	if len(os.Args) < 2 {
 		fmt.Println("No arguments were provided.")
 		os.Exit(1)
 	}
 
 	//initialize cmd name and args
-	cmdName := os.Args[0]
+	cmdName := os.Args[1]
 	var cmdArgs []string
-	if len(os.Args) == 1 {
+	if len(os.Args) == 2 {
 		cmdArgs = []string{}
 	} else {
-		cmdArgs = os.Args[1:]
+		cmdArgs = os.Args[2:]
 	}
 
 
@@ -48,5 +48,5 @@ func main() {
 
 	err = cmds.run(&s, cmd)
 	if err != nil { panic(err) }
-	
+
 }
