@@ -9,12 +9,18 @@ import (
 func handlerReset(s *state, cmd command) error {
 
 	err := s.db.DeleteAllUsers(context.Background())
-	if err != nil && err.Error() != `pq: table "users" does not exist`{
-		fmt.Printf("dropping users table has failed %v\n", err)
+	if err != nil{
+		fmt.Printf("deleting all users has failed %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("All users deleted successfully.")
+	err = s.db.DeleteAllFeeds(context.Background())
+	if err != nil {
+		fmt.Printf("deleting all feeds has failed %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("All users and feeds deleted successfully.")
 
 	return nil
 }

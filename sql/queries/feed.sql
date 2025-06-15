@@ -7,3 +7,10 @@ VALUES (
     $4
 )
 RETURNING *;
+
+
+-- name: GetFeeds :many
+SELECT * FROM feed;
+
+-- name: DeleteAllFeeds :exec
+DELETE FROM feed;

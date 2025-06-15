@@ -8,18 +8,19 @@ import (
 
 func handlerFeeds(s *state, cmd command) error {
 
-	users, err := s.db.GetUsers(context.Background())
+	feeds, err := s.db.GetFeeds(context.Background())
 	if err != nil {
-		fmt.Printf("getting all users has failed %v\n", err)
+		fmt.Printf("getting all feeds has failed %v\n", err)
 		os.Exit(1)
 	}
 
-	for _, user := range users {
-		fmt.Printf("* %s", user.Name)
-		if user.Name == s.cfg.CurrentUsername {
-			fmt.Print(" (current)")
+	for _, feed := range feeds {
+		user, err := s.db.GetUserByID(context.Background(), feed.UserID)
+		if err != nil {
+			return err
 		}
-		fmt.Println()
+
+		fmt.Printf("Name: %s\nURL: %s\nCreated by: %s\n", feed.Name, feed.Url, user.Name)
 	}
 
 	return nil
