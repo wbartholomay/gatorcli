@@ -12,6 +12,7 @@ func handlerReset(s *state, cmd command) error {
 		return fmt.Errorf("deleting all users has failed %v", err)
 	}
 
+	//not necessary due to cascading
 	err = s.db.DeleteAllFeeds(context.Background())
 	if err != nil {
 		return fmt.Errorf("deleting all feeds has failed %v", err)
