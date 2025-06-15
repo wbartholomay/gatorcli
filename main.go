@@ -1,23 +1,33 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/wbartholomay/gatorcli/internal/config"
+	"github.com/wbartholomay/gatorcli/internal/database"
 )
 
 var handlers map[string]func(*state, command) error = map[string]func(*state, command) error{
 	"login" : handlerLogin,
+	"register" : handlerRegister,
 }
 
 func main() {
 	cfg, err := config.Read()
 	if err != nil { panic(err) }
 
+	//connect to database
+	db, err := sql.Open("postgres", cfg.DbUrl)
+	if err != nil { panic(err) }
+
 	//intialize state struct
+	dbQueries := database.New(db)
 	s := state{
 		cfg : &cfg,
+		db : dbQueries,
 	}
 
 	//initialize commands struct
