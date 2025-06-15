@@ -14,6 +14,8 @@ var handlers map[string]func(*state, command) error = map[string]func(*state, co
 	"login" : handlerLogin,
 	"register" : handlerRegister,
 	"reset" : handlerReset,
+	"users" : handlerUsers,
+	"agg" : handlerAgg,
 }
 
 func main() {
