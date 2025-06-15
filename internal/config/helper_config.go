@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 )
 
 func getConfigFilePath() (string, error) {
@@ -11,7 +12,7 @@ func getConfigFilePath() (string, error) {
 		return "", err
 	}
 
-	return homeDir + "\\" + configFileName, nil
+	return filepath.Join(homeDir, configFileName), nil
 }
 
 func (cfg Config) write() error {
