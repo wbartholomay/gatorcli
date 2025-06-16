@@ -38,7 +38,8 @@ func main() {
 	cmds.register("follow", middlewareLoggedIn(handlerFollow))
 	cmds.register("following", middlewareLoggedIn(handlerFollowing))
 	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow))
-
+	cmds.register("browse", middlewareLoggedIn(handlerBrowse))
+	
 	//read args from command line, create command struct
 	if len(os.Args) < 2 {
 		fmt.Println("No arguments were provided.")

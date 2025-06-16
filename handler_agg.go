@@ -56,12 +56,10 @@ func scrapeFeeds(s *state) error {
 	feed, err := rss.FetchFeed(context.Background(), nextFeed.Url)
 	if err != nil { return err }
 
-	post, err := saveFeed(s, feed, nextFeed)
+	_, err = saveFeed(s, feed, nextFeed)
 	if err != nil {
 		return fmt.Errorf("error saving post: %w", err)
 	}
-
-	fmt.Printf("Post saved successfully. Post: %v\n", post)
 
 	return nil
 
