@@ -20,6 +20,8 @@ func handlerAddFeed(s *state, cmd command, user database.User) error {
 
 	feedParams := database.CreateFeedParams{
 		ID : uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
 		Name : name,
 		Url : url,
 		UserID: user.ID,
