@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/wbartholomay/gatorcli/internal/database"
 	"github.com/wbartholomay/gatorcli/internal/rss"
 )
@@ -55,10 +56,36 @@ func scrapeFeeds(s *state) error {
 	feed, err := rss.FetchFeed(context.Background(), nextFeed.Url)
 	if err != nil { return err }
 
-	for _, item := range feed.Channel.Item {
-		fmt.Println(item.Title)
+	post, err := saveFeed(s, feed, nextFeed)
+	if err != nil {
+		return fmt.Errorf("error saving post: %w", err)
 	}
+
+	fmt.Printf("Post saved successfully. Post: %v\n", post)
 
 	return nil
 
+}
+
+func saveFeed(s *state, feed *rss.RSSFeed, dbFeed database.Feed) (database.Post, error) {
+	createPostParams := database.CreatePostParams{
+		ID: uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		Title: feed.Channel.Title,
+		Url: dbFeed.Url,
+		Description: sql.NullString{
+			String: feed.Channel.Description,
+			Valid: true,
+		},
+		PublishedAt: dbFeed.CreatedAt,
+		FeedID: dbFeed.ID,
+	}
+
+	post, err := s.db.CreatePost(context.Background(), createPostParams)
+	if err != nil && err.Error() != "post with that URL already exists" {
+		return database.Post{}, err
+	}
+
+	return post, nil
 }
